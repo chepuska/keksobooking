@@ -1,4 +1,5 @@
-import {features} from "/js/data.js"
+import { features } from '/js/data.js'
+console.log('util');
 // Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно. Будет использоваться для генерации временных географических координат в следующем задании. Пример использования функции:
 function getRandomPositiveInteger (a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)))
@@ -17,7 +18,7 @@ function getRandomPositiveFloat (a, b, digits = 1) {
 // массив чисел  от 1 до 10. Перед однозначными числами ставится 0. Например, 01, 02...10. Адреса изображений не повторяются.
 function getAuthorAvatar () {
   const ArrAvatars = new Set()
-  let str
+  let str = ''
   do {
     str = getRandomPositiveInteger(1, 10)
     str = str < 10 ? `0${str}` : String(str)
@@ -27,93 +28,86 @@ function getAuthorAvatar () {
   return [...ArrAvatars]
 }
 //  функция генерация рандомного индекса для массива
-function getRandomValue(arr){
-  return arr[getRandomPositiveInteger(0, arr.length-1)];
+function getRandomValue (arr) {
+  return arr[getRandomPositiveInteger(0, arr.length - 1)]
 }
-// features, массив строк — массив случайной длины из значений: wifi, dishwasher, parking, washer, elevator, conditioner. Значения не должны повторяться.
 
-function getRandomFeatures(features){
-
-  let setFeatures= new Set()
+function getRandomFeatures (features) {
+  const setFeatures = new Set()
   do {
-   let feature = getRandomValue(features)
+    const feature = getRandomValue(features)
     setFeatures.add(feature)
-  } while (setFeatures.size<getRandomPositiveInteger(1,features.length-1))
+  } while (setFeatures.size < getRandomPositiveInteger(1, features.length - 1))
   return [...setFeatures]
 }
 
-//генерация адреса фотографии
-function getRandomPhotos(photos){
+// генерация адреса фотографии
+function getRandomPhotos (photos) {
   let photo
-  let ind =getRandomPositiveInteger(1, 10)
-  let array= new Array()
+  const ind = getRandomPositiveInteger(1, 10)
+  const array = []
   do {
     photo = getRandomValue(photos)
     array.push(photo)
-  } while (array.length<ind)
+  } while (array.length < ind)
   return array
 }
 
-function getEndingRooms(amount){
-  let result =''
+function getEndingRooms (amount) {
   switch (amount) {
     case 1:
-      return result="комната";
+      return 'комната'
     case 2, 3, 4 :
-      return result="комнаты";
+      return 'комнаты'
     default:
-      return result ="комнат"
+      return 'комнат'
   }
-    return result
 }
-function getEndingGuests(amount){
-  let result =''
+function getEndingGuests (amount) {
   switch (amount) {
     case 1:
-      return result="гостя";
+      return 'гостя'
     default:
-      return result ="гостей"
+      return 'гостей'
   }
-    return result
 }
 
-function getType(type){
-  let result ='';
-    switch (type) {
-  case 'flat':
-    return result="Квартира";
-  case 'bungalow':
-    return  result="Бунгало";
-  case 'house':
-    return result="Дом";
-  case 'palace':
-    return "Дворец";
-  case 'hotel':
-    return result="Отель";
+function getType (type) {
+  switch (type) {
+    case 'flat':
+      return 'Квартира'
+    case 'bungalow':
+      return 'Бунгало'
+    case 'house':
+      return 'Дом'
+    case 'palace':
+      return 'Дворец'
+    case 'hotel':
+      return 'Отель'
   }
-  return result;
 }
 
-function getFeaturesList(features, listNodes){
-  const modifiers =features.map(feature=>'popup__feature--'+ feature)
-  listNodes.forEach(item=>{
-    const modifier =item.classList[1]
-    if(!modifiers.includes(modifier)){
-      item.remove();
+function getFeaturesList (features, listNodes) {
+  const modifiers = features.map(feature => 'popup__feature--' + feature)
+  console.log(modifiers);
+  listNodes.forEach(item => {
+    const modifier = item.classList[1]
+    if (!modifiers.includes(modifier)) {
+      item.remove()
     }
   })
 }
 
-//импортируем в generat.js
-export {getRandomPositiveInteger}
-export {getRandomPositiveFloat}
-export {getAuthorAvatar}
-export {getRandomValue}
-export {getRandomFeatures}
-export {getRandomPhotos}
+// импортируем в generat.js
+export { getRandomPositiveInteger }
+export { getRandomPositiveFloat }
+export { getAuthorAvatar }
+export { getRandomValue }
+export { getRandomFeatures }
+export { getRandomPhotos }
 
-//импортируем в render.js
-export {getEndingRooms}
-export {getEndingGuests}
-export {getType}
-export {getFeaturesList}
+// импортируем в render.js
+export { getEndingRooms }
+export { getEndingGuests }
+export { getType }
+export { getFeaturesList }
