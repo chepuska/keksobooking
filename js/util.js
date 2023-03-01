@@ -1,5 +1,5 @@
 import { features } from '/js/data.js'
-console.log('util');
+
 // Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно. Будет использоваться для генерации временных географических координат в следующем задании. Пример использования функции:
 function getRandomPositiveInteger (a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)))
@@ -89,7 +89,7 @@ function getType (type) {
 
 function getFeaturesList (features, listNodes) {
   const modifiers = features.map(feature => 'popup__feature--' + feature)
-  console.log(modifiers);
+
   listNodes.forEach(item => {
     const modifier = item.classList[1]
     if (!modifiers.includes(modifier)) {

@@ -1,6 +1,6 @@
 import { createData } from '/js/generat.js'
 import { getEndingRooms, getEndingGuests, getType, getFeaturesList } from '/js/util.js'
-console.log('render');
+
 const placeInsertCard = document.querySelector('#map-canvas')
 const card = document.querySelector('#card').content
 const popup = card.querySelector('.popup')
@@ -40,7 +40,7 @@ function createArticle (data) {
     photos.append(photoExzample)
   })
   getFeaturesList(offer.features, featuresItems)
-  console.log(featuresItems);
+
   return fragment
 }
 

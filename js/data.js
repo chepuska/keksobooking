@@ -1,7 +1,7 @@
 const title = [
   'Lorem Ipsum', 'Откуда он появился', 'Текст-рыба, часто используемый', 'Ipsum, consectetur', 'Finibus Bonorum et Malorum', 'Известные генераторы', 'Трактат по теории этики', 'Популяризация в новое время', 'Классический текст Lorem', 'Английский перевод, сделанный H. Rackham'
 ]
-console.log('data');
+
 const check = ['12:00', '13:00', '14:00']
 
 const photos = [

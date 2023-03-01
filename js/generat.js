@@ -1,7 +1,7 @@
 import { types, title, check, photos, features, description } from '/js/data.js'
 
 import { getRandomPositiveInteger, getRandomPositiveFloat, getAuthorAvatar, getRandomValue, getRandomFeatures, getRandomPhotos } from '/js/util.js'
-console.log('generate');
+
 function createObject (id) {
   let obj = {}
   const location = {
