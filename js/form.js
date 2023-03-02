@@ -21,7 +21,18 @@ const pristineMapFilters = new Pristine(formMapFilters,defaultConfig);
 const pristineAdForm =new Pristine(adForm, defaultConfig)
 
 const price =document.querySelector('#price')
-
+const typeHosting =document.querySelector('#type')
+//изменение типа жилья приводит к изменению плэйсхолдера мин-прайс
+typeHosting.addEventListener('change', (evt)=>{
+  console.log(typeHosting.value);
+  complianceHostingPrice.filter(i=>{
+      if(typeHosting.value==i[0]){
+        price.placeholder=i[2]
+        price.min = i[2]
+        pristineAdForm.validate()
+      }
+  })
+})
 // Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
 const complianceHostingPrice =[
   ['palace','дворца', 10000,],
@@ -41,7 +52,7 @@ function validateComplianceTypeHostMinPrice(value){
   return flag
 }
 function getErrorComplainceHostPrice(){
-  const typeHosting =document.querySelector('#type').value
+  const typeHosting =document.querySelector('#type').value 
   let message =''
   complianceHostingPrice.filter(i=>{
     if(typeHosting==i[0]){
@@ -50,6 +61,7 @@ function getErrorComplainceHostPrice(){
   })
   return message
 }
+
 pristineAdForm.addValidator(
   price,
   validateComplianceTypeHostMinPrice,
@@ -72,7 +84,77 @@ function validateFieldPriceTypeNumber(value){
 }
 pristineAdForm.addValidator(price,validateFieldPriceTypeNumber, 'это число', 2, false)
 
+//Поля «Время заезда» и «Время выезда» синхронизированы: при изменении значения одного поля во втором выделяется соответствующее ему значение. Например, если время заезда указано «после 14», то время выезда будет равно «до 14» и наоборот.
+const timein =document.querySelector('#timein')
+const timeout =document.querySelector('#timeout')
+timein.addEventListener('change', ()=>{
+  timeout.value =timein.value
+})
+timeout.addEventListener('change', ()=>{
+  timein.value =timeout.value
+})
+//  Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, что при выборе количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
 
+// 1 комната — «для 1 гостя»;
+// 2 комнаты — «для 2 гостей» или «для 1 гостя»;guests
+// 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
+// 100 комнат — «не для гостей». под ограничениями подразумевается валидация.
+const rooms =document.querySelector('[name="rooms"]')
+console.log(rooms.value)
+const capacity =document.querySelector('[name="capacity"]')
+
+const guestsRoomRatioText ={
+  '1':['для 1 гостя'],
+  '2':['для 2 гостей','для 1 гостя'],
+  '3':['для 3 гостей','для 2 гостей','для 1 гостя'],
+  '100':['не для гостей'],
+}
+const guestsRoomRatioOption={
+  "1":["1"],
+  "2":["1","2"],
+  "3":['1',"2","3"],
+  "100":["0"]
+}
+function getGuestsRoomRatio(){
+  console.log(guestsRoomRatioOption[rooms.value])
+  console.log("capacity: "+capacity.value)
+  return guestsRoomRatioOption[rooms.value].includes(capacity.value)
+}
+
+function getRoomCapacityRatioErrorMessage () {
+  let str =''
+     guestsRoomRatioOption[rooms.value].filter(i=>{ 
+  
+    if(i!=capacity.value){
+      
+      if(capacity.value==1){
+        console.log(i) 
+        str =`невозможно забронировать для 1 гостя`
+      }
+      if(capacity.value==2 ||capacity.value==3){
+        console.log(i) 
+        str =`невозможно забронировать для ${capacity.value} гостей`
+      }
+      if(capacity.value==0 && rooms.value==100){
+        console.log(i) 
+        str=`не бронируется для гостей`
+      }  
+    }else{
+      str=''
+    }
+    return str
+})
+ 
+  return str
+  
+}
+rooms.addEventListener('change',()=>{
+  
+  getRoomCapacityRatioErrorMessage
+  pristineAdForm.validate()
+} )
+pristineAdForm.addValidator(rooms, getGuestsRoomRatio, 'это не возможно', 2, false)
+pristineAdForm.addValidator(capacity,getGuestsRoomRatio,getRoomCapacityRatioErrorMessage,1 ,false)
 adForm.addEventListener('submit',(evt)=>{
   evt.preventDefault()
   const priceInput =document.querySelector('#price').value
