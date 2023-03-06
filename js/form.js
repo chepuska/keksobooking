@@ -100,7 +100,7 @@ timeout.addEventListener('change', ()=>{
 // 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
 // 100 комнат — «не для гостей». под ограничениями подразумевается валидация.
 const rooms =document.querySelector('[name="rooms"]')
-console.log(rooms.value)
+// console.log(rooms.value)
 const capacity =document.querySelector('[name="capacity"]')
 
 const guestsRoomRatioText ={
@@ -148,23 +148,21 @@ function getRoomCapacityRatioErrorMessage () {
   return str
   
 }
-rooms.addEventListener('change',()=>{
-  
+rooms.addEventListener('change',()=>{ 
   getRoomCapacityRatioErrorMessage
   pristineAdForm.validate()
 } )
-pristineAdForm.addValidator(rooms, getGuestsRoomRatio, 'это не возможно', 2, false)
+pristineAdForm.addValidator(rooms, getGuestsRoomRatio, '', 2, false)
 pristineAdForm.addValidator(capacity,getGuestsRoomRatio,getRoomCapacityRatioErrorMessage,1 ,false)
 adForm.addEventListener('submit',(evt)=>{
-  evt.preventDefault()
+  // evt.preventDefault()
   const priceInput =document.querySelector('#price').value
-  
   const isValidate =pristineAdForm.validate()
   if(isValidate=='true'){
     console.log('валидация прошла '+ isValidate);
   }else{
     console.log('валидация не прошла '+ isValidate);
-    // evt.preventDefault()
+    evt.preventDefault()
   }
 })
 
