@@ -44,12 +44,12 @@ function getRandomFeatures (features) {
 // генерация адреса фотографии
 function getRandomPhotos (photos) {
   let photo
-  const ind = getRandomPositiveInteger(1, 10)
+  const index = getRandomPositiveInteger(1, 10)
   const array = []
   do {
     photo = getRandomValue(photos)
     array.push(photo)
-  } while (array.length < ind)
+  } while (array.length < index)
   return array
 }
 
@@ -57,7 +57,11 @@ function getEndingRooms (amount) {
   switch (amount) {
     case 1:
       return 'комната'
-    case 2, 3, 4 :
+    case 2:
+      return 'комнаты'
+    case 3 :
+      return 'комнаты'
+    case 4 :
       return 'комнаты'
     default:
       return 'комнат'

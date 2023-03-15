@@ -32,8 +32,8 @@ function creatingActiveState () {
 
   document.querySelector('.map__features').removeAttribute('disabled')
 }
-// creatingUnactiveState()
-creatingActiveState()
+creatingUnactiveState()
+
 
 export { creatingUnactiveState }
 export { creatingActiveState }

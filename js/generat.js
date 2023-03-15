@@ -1,7 +1,7 @@
 import { types, title, check, photos, features, description } from '/js/data.js'
 
 import { getRandomPositiveInteger, getRandomPositiveFloat, getAuthorAvatar, getRandomValue, getRandomFeatures, getRandomPhotos } from '/js/util.js'
-
+//создание объекта
 function createObject (id) {
   let obj = {}
   const location = {
@@ -29,6 +29,7 @@ function createObject (id) {
   }
   return obj
 }
+//создание массива объектов (данных для объявлений)
 const createData = getAuthorAvatar().map(createObject)
 
 export { createData }

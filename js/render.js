@@ -4,7 +4,7 @@ import { getEndingRooms, getEndingGuests, getType, getFeaturesList } from '/js/u
 const placeInsertCard = document.querySelector('#map-canvas')
 const card = document.querySelector('#card').content
 const popup = card.querySelector('.popup')
-
+//создание объявления
 function createArticle (data) {
   const { author, offer } = data
   const fragment = popup.cloneNode(true)
@@ -45,6 +45,6 @@ function createArticle (data) {
 }
 
 const result = createData.map(createArticle)
-const ad = placeInsertCard.append(result[5])
+// const ad = placeInsertCard.append(result[5])
 
-export { ad }
+export { result }
