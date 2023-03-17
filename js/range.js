@@ -3,7 +3,6 @@ import {pristineAdForm} from '../../../../../js/form.js'
 
 const sliderElement =document.querySelector('.ad-form__slider')
 const valueElement =document.querySelector('input[name="price"]')
-console.log(valueElement);
 valueElement.value = 1000
 //создание слайдера со стартовыми опциями
 noUiSlider.create(sliderElement,{
@@ -24,8 +23,7 @@ noUiSlider.create(sliderElement,{
   }
 })
 //изменение значения ползунка
-sliderElement.noUiSlider.on('update', (...rest)=>{
-  console.log(rest);
+sliderElement.noUiSlider.on('update', ()=>{
   valueElement.value = sliderElement.noUiSlider.get()
   pristineAdForm.validate()
 })

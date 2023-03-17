@@ -1,5 +1,3 @@
-
-console.log('form')
 const defaultConfig = {
   // class of the parent element where the error/success class is added
   classTo: 'ad-form__element',
@@ -13,15 +11,17 @@ const defaultConfig = {
   errorTextClass: 'has-danger'
 }
 const formMapFilters = document.querySelector('.map__filters')
+const pristineMapFilters = new Pristine(formMapFilters, defaultConfig)
+
 const adForm = document.querySelector('.ad-form')
 // console.log(formMapFilters);
 // console.log(adForm);
-const pristineMapFilters = new Pristine(formMapFilters, defaultConfig)
 
 const pristineAdForm = new Pristine(adForm, defaultConfig)
-// import '../../../../../js/range.js'
-const price = document.querySelector('#price')
+
+const price = document.querySelector('input[name="price"]')
 const typeHosting = document.querySelector('#type')
+
 // изменение типа жилья приводит к изменению плэйсхолдера мин-прайс
 typeHosting.addEventListener('change', (evt) => {
   console.log(typeHosting.value)
