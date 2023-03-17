@@ -49,6 +49,7 @@ function validateComplianceTypeHostMinPrice(value){
       flag =false
     }
   })
+  console.log('flagPrice = '+flag);
   return flag
 }
 function getErrorComplainceHostPrice(){
@@ -135,7 +136,7 @@ function getRoomCapacityRatioErrorMessage () {
         console.log(i) 
         str =`невозможно забронировать для ${capacity.value} гостей`
       }
-      if(capacity.value==0 && rooms.value==100){
+      if(capacity.value!==0 && rooms.value!==100){
         console.log(i) 
         str=`не бронируется для гостей`
       }  
@@ -158,7 +159,7 @@ adForm.addEventListener('submit',(evt)=>{
   // evt.preventDefault()
   const priceInput =document.querySelector('#price').value
   const isValidate =pristineAdForm.validate()
-  if(isValidate=='true'){
+  if(isValidate=== true){
     console.log('валидация прошла '+ isValidate);
   }else{
     console.log('валидация не прошла '+ isValidate);
