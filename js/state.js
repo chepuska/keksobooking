@@ -34,7 +34,6 @@ function creatingActiveState () {
 }
 creatingUnactiveState()
 
-
 export { creatingUnactiveState }
 export { creatingActiveState }
 // Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;

@@ -1,10 +1,10 @@
-import { createData } from '/js/generat.js'
-import { getEndingRooms, getEndingGuests, getType, getFeaturesList } from '/js/util.js'
+import { createData } from '../../../../../js/generat.js'
+import { getEndingRooms, getEndingGuests, getType, getFeaturesList } from '../../../../../js/util.js'
 
 const placeInsertCard = document.querySelector('#map-canvas')
 const card = document.querySelector('#card').content
 const popup = card.querySelector('.popup')
-//создание объявления
+// создание объявления
 function createArticle (data) {
   const { author, offer } = data
   const fragment = popup.cloneNode(true)
