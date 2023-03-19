@@ -134,12 +134,12 @@ function getRoomCapacityRatioErrorMessage () {
         console.log(i)
         str = `невозможно забронировать для ${capacity.value} гостей`
       }
-      if (capacity.value == 0 && rooms.value == 100) {
-        console.log(i)
-        str = 'не бронируется для гостей'
-      }
-    } else {
-      str = ''
+      if(capacity.value!==0 && rooms.value!==100){
+        console.log(i) 
+        str=`не бронируется для гостей`
+      }  
+    }else{
+      str=''
     }
     return str
   })
@@ -156,7 +156,7 @@ adForm.addEventListener('submit', (evt) => {
   // evt.preventDefault()
   const priceInput = document.querySelector('#price').value
   const isValidate = pristineAdForm.validate()
-  if (isValidate == 'true') {
+  if (isValidate == true) {
     console.log('валидация прошла ' + isValidate)
     mainPinMarker.setLatLng({
       lat: 35.6895,
