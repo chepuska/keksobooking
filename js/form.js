@@ -1,3 +1,7 @@
+import { sendData } from "./api.js"
+import {setStartCoordinats} from './map.js'
+import './reset.js'
+import './upload.js'
 const defaultConfig = {
   // class of the parent element where the error/success class is added
   classTo: 'ad-form__element',
@@ -10,12 +14,11 @@ const defaultConfig = {
   // class of the error text element
   errorTextClass: 'has-danger'
 }
-const formMapFilters = document.querySelector('.map__filters')
-const pristineMapFilters = new Pristine(formMapFilters, defaultConfig)
+// const formMapFilters = document.querySelector('.map__filters')
+
+// const pristineMapFilters = new Pristine(formMapFilters, defaultConfig)
 
 const adForm = document.querySelector('.ad-form')
-// console.log(formMapFilters);
-// console.log(adForm);
 
 const pristineAdForm = new Pristine(adForm, defaultConfig)
 
@@ -26,7 +29,7 @@ const typeHosting = document.querySelector('#type')
 typeHosting.addEventListener('change', (evt) => {
   console.log(typeHosting.value)
   complianceHostingPrice.filter(i => {
-    if (typeHosting.value == i[0]) {
+    if (typeHosting.value === i[0]) {
       price.placeholder = i[2]
       price.min = i[2]
       pristineAdForm.validate()
@@ -41,11 +44,12 @@ const complianceHostingPrice = [
   ['bungalow', 'бунгало', 0],
   ['hotel', 'отеля', 3000]
 ]
+
 function validateComplianceTypeHostMinPrice (value) {
   const typeHosting = document.querySelector('#type').value
   let flag = true
   complianceHostingPrice.filter(i => {
-    if (typeHosting == i[0] && value < i[2]) {
+    if (typeHosting === i[0] && value < i[2]) {
       flag = false
     }
   })
@@ -55,7 +59,7 @@ function getErrorComplainceHostPrice () {
   const typeHosting = document.querySelector('#type').value
   let message = ''
   complianceHostingPrice.filter(i => {
-    if (typeHosting == i[0]) {
+    if (typeHosting === i[0]) {
       message = `Минимальная стоимость ${i[1]} не меньше ${i[2]}`
     }
   })
@@ -80,7 +84,7 @@ function validateFieldPriceTypeNumber (value) {
   const arr = value.split('')
   // const flag = arr.every(i => Number.isInteger(i))
   const flag = arr.every(i => /^(0|[1-9]\d*)$/.test(i))
-  // console.log('flag: '+ flag);
+
   return flag
 }
 pristineAdForm.addValidator(price, validateFieldPriceTypeNumber, 'это должно быть целое число', 2, false)
@@ -101,15 +105,8 @@ timeout.addEventListener('change', () => {
 // 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
 // 100 комнат — «не для гостей». под ограничениями подразумевается валидация.
 const rooms = document.querySelector('[name="rooms"]')
-// console.log(rooms.value)
 const capacity = document.querySelector('[name="capacity"]')
 
-const guestsRoomRatioText = {
-  1: ['для 1 гостя'],
-  2: ['для 2 гостей', 'для 1 гостя'],
-  3: ['для 3 гостей', 'для 2 гостей', 'для 1 гостя'],
-  100: ['не для гостей']
-}
 const guestsRoomRatioOption = {
   1: ['1'],
   2: ['1', '2'],
@@ -131,11 +128,9 @@ function getRoomCapacityRatioErrorMessage () {
         str = 'невозможно забронировать для 1 гостя'
       }
       if (capacity.value == 2 || capacity.value == 3) {
-        console.log(i)
         str = `невозможно забронировать для ${capacity.value} гостей`
       }
       if(capacity.value!==0 && rooms.value!==100){
-        console.log(i) 
         str=`не бронируется для гостей`
       }  
     }else{
@@ -146,30 +141,49 @@ function getRoomCapacityRatioErrorMessage () {
 
   return str
 }
+
 rooms.addEventListener('change', () => {
   getRoomCapacityRatioErrorMessage
   pristineAdForm.validate()
 })
+
 pristineAdForm.addValidator(rooms, getGuestsRoomRatio, '', 2, false)
 pristineAdForm.addValidator(capacity, getGuestsRoomRatio, getRoomCapacityRatioErrorMessage, 1, false)
-adForm.addEventListener('submit', (evt) => {
-  // evt.preventDefault()
-  const priceInput = document.querySelector('#price').value
-  const isValidate = pristineAdForm.validate()
-  if (isValidate == true) {
-    console.log('валидация прошла ' + isValidate)
-    mainPinMarker.setLatLng({
-      lat: 35.6895,
-      lng: 139.692
-    })
-      .setView({
-        lat: 35.6895,
-        lng: 139.692
-      }, 12)
-  } else {
-    console.log('валидация не прошла ' + isValidate)
+
+function setUploadFormSubmit (success) {
+  adForm.addEventListener('submit', (evt) => {
     evt.preventDefault()
-  }
-})
+    const isValidate = pristineAdForm.validate()
+    const formdata = new FormData(evt.target)
+    if (isValidate) {
+      console.log('валидация прошла ' + isValidate)
+      // mainPinMarker.setLatLng({
+      //   lat: 35.6895,
+      //   lng: 139.692
+      // }).setView({
+      //   lat: 35.6895,
+      //   lng: 139.692
+      // }, 12)
+      //собираем данные в форму и отправляем на сервер
+      sendData(
+        () => {
+          success()
+          success1()
+        },
+        () => {
+          fail()
+        },
+        formdata)
+    }
+  })
+}
+setUploadFormSubmit(setStartCoordinats)
+// asdfc dsvb dsv sdv sdbv dsb sdbv
+function success1 () {
+  console.log('загрузка прошла')
+}
+function fail () {
+  console.log('загрузка НЕ прошла')
+}
 
 export {pristineAdForm}

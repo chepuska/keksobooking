@@ -1,4 +1,3 @@
-console.log('range');
 import {pristineAdForm} from '../../../../../js/form.js'
 
 const sliderElement =document.querySelector('.ad-form__slider')

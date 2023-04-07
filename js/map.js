@@ -41,12 +41,15 @@ mainPinMarker.addTo(map)
 const coordinats = mainPinMarker.getLatLng()
 const { lat, lng } = coordinats
 let stringCoordinats = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
+console.log("bebebe")
 document.querySelector('[name=\'address\']').value = stringCoordinats
+console.log("value address "+document.querySelector('[name=\'address\']').value);
 // при перемещении главной метки координаты передаются в инпут для отправки формы на сервер
 mainPinMarker.on('moveend', (evt) => {
   const currentCoordinats = evt.target.getLatLng()
   stringCoordinats = `${currentCoordinats.lat.toFixed(5)}, ${currentCoordinats.lng.toFixed(5)}`
-  document.querySelector('[name=\'address\']').value = stringCoordinats
+  console.log("AAA")
+  // document.querySelector('[name=\'address\']').value = stringCoordinats
   console.log(stringCoordinats)
 })
 
@@ -124,5 +127,18 @@ createData.forEach((point) => {
     .addTo(markerGroup)
     .bindPopup(createCustomPopup(point))
 })
+
+function setStartCoordinats () {
+  mainPinMarker.setLatLng({
+    lat: 35.6895,
+    lng: 139.692
+  })
+  map.setView({
+    lat: 35.6895,
+    lng: 139.692
+  }, 12)
+}
+// setStartCoordinats()
+export { setStartCoordinats }
 
 // markerGroup.clearLayers();
