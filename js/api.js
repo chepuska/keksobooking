@@ -1,3 +1,4 @@
+let dataArray =[]
 function getData(onSuccess, onError){
   fetch(
     'https://25.javascript.pages.academy/keksobooking/data',
@@ -13,6 +14,7 @@ function getData(onSuccess, onError){
   })
   .then((data)=>{
     onSuccess(data);
+    dataArray =data;
   })
   .catch((err)=>{
     const textError ='Что-то пошло не так, перегрузите страницу';
@@ -34,7 +36,9 @@ function sendData(onSuccess, onFail, body){
     }else{
       onFail()
     }
+    
   }).catch(()=>onFail())
 }
 
 export {getData, sendData}
+

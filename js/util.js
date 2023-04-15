@@ -101,8 +101,98 @@ function getFeaturesList (features, listNodes) {
     }
   })
 }
+ const isEscapeKey = (evt) => evt.key === 'Escape'
+ 
 
+//функция открытия попапа успешной отправки данных формы
+function showSuccess(){
+  const templateSuccess =document.querySelector('#success').content;
+  const successElement =templateSuccess.cloneNode(true);
+  document.body.append(successElement);
+}
+//хэндлер закрытия попапа успеха на esc
+document.addEventListener('keydown',onRemovePopupSuccessEscKeydown);
+//функция закрытия попапа успеха по esc
+function onRemovePopupSuccessEscKeydown(evt){
+  if(document.querySelector('.success') && isEscapeKey(evt)){
+    onRemovePopupSuccess();
+  }
+}
+//функция закрытия попапа успеха по нажатию любой клавиши
+function onRemovePopupSuccessAnyClick(evt){
+  if(evt.target.classList.contains('success') ||evt.target.classList.contains('success__message')){
+    onRemovePopupSuccess();
+  }
+}
+// функция закрытия попапа успеха на любой клик мыши
+document.addEventListener('click', onRemovePopupSuccessAnyClick);
+//функция закрытия попапа успеха
+function onRemovePopupSuccess(){
+  const successPopup =document.querySelector('.success');
+  successPopup.remove();
+}
+// функция показа попапа ошибки загрузки формы
+function showErrorPopup(){
+  const errorTemplate =document.querySelector('#error').content;
+  const errorElementPopup =errorTemplate.cloneNode(true);
+  document.body.append(errorElementPopup);
+  document.querySelector('.error__button').addEventListener('click', onRemovePopupError);
+}
+//функция закрытия попапа ошибки по кнопке
+function onRemovePopupError(){
+  document.querySelector('.error').remove();
+}
+//функция закрытия окна ошибки по нажатию любой клавиши
+function onRemovePopupErrorAnyClick(evt){
+  
+  if(evt.target.classList.contains('error') ||evt.target.classList.contains('error__message')){
+    onRemovePopupError();
+  }
+}
+//хэндлер закрытия попапа ошибки на любой клик мыши
+document.addEventListener('click', onRemovePopupErrorAnyClick);
 
+//хэндлер закрытия попапа ошибки на esc
+document.addEventListener('keydown',onRemovePopupErrorEscKeydown);
+//функция закрытия попапа ошибки по esc
+function onRemovePopupErrorEscKeydown(evt){
+  if(document.querySelector('.error') && isEscapeKey(evt)){
+    onRemovePopupError();
+  }
+}
+//фунция показа ошибки при получении данных с сервера
+const ALERT_SHOW_TIME = 5000;
+function showAlert(message){
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+}
+//функции для getData()
+let dataArray =[]
+function onSuccess(data){
+  dataArray = data
+
+}
+function onError(err){
+  console.log(err);
+}
+export {showSuccess, showErrorPopup, showAlert}
+export {onSuccess, onError, dataArray}
 // импортируем в generat.js
 export { getRandomPositiveInteger }
 export { getRandomPositiveFloat }

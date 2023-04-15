@@ -1,16 +1,17 @@
-import { creatingActiveState } from '../../../../../js/state.js'
-import { createData } from '../../../../../js/generat.js'
-import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from '../../../../../js/util.js'
+import { creatingUnactiveState, creatingActiveState } from './state.js'
+import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js'
+
+async creatingUnactiveState()
 
 const map = new L.map('map-canvas')
-  .on('load', () => {
-    console.log('map')
+await map.on('load', () => {
     creatingActiveState()
   })
   .setView({
     lat: 35.6895,
     lng: 139.692
   }, 12)
+
 
 // активируем тайлы для отображения определенных карт
 L.tileLayer(
@@ -41,16 +42,13 @@ mainPinMarker.addTo(map)
 const coordinats = mainPinMarker.getLatLng()
 const { lat, lng } = coordinats
 let stringCoordinats = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
-console.log("bebebe")
 document.querySelector('[name=\'address\']').value = stringCoordinats
-console.log("value address "+document.querySelector('[name=\'address\']').value);
 // при перемещении главной метки координаты передаются в инпут для отправки формы на сервер
 mainPinMarker.on('moveend', (evt) => {
   const currentCoordinats = evt.target.getLatLng()
   stringCoordinats = `${currentCoordinats.lat.toFixed(5)}, ${currentCoordinats.lng.toFixed(5)}`
-  console.log("AAA")
-  // document.querySelector('[name=\'address\']').value = stringCoordinats
-  console.log(stringCoordinats)
+  document.querySelector('input[name="address"]').value = stringCoordinats 
+
 })
 
 // создать слой и добавить его на карту
@@ -63,12 +61,12 @@ const usualPinIcon = L.icon({
   iconAnchor: [20, 40]
 })
 // функция создания кастомного балуна
-const createCustomPopup = ({ author, offer }) => {
+const createCustomPopup = ({ author, location, offer }) => {
   const balloonTemplate = document.querySelector('#card').content.querySelector('.popup')
   const popupElement = balloonTemplate.cloneNode(true)
 
   popupElement.querySelector('.popup__avatar').src = author.avatar
-
+ 
   popupElement.querySelector('.popup__title').textContent = offer.title
 
   popupElement.querySelector('.popup__text--address').textContent = offer.address
@@ -82,14 +80,14 @@ const createCustomPopup = ({ author, offer }) => {
   popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`
 
   const featuresItems = popupElement.querySelectorAll('.popup__feature')
-  if (offer.features.length == 0) {
-    popupElement.querySelector('.popup__features').innerHTML = ''
+  if (!offer.features) {
+    popupElement.querySelector('.popup__features').classList.add('hidden')
   } else {
     getFeaturesList(offer.features, featuresItems)
   }
 
   const description = popupElement.querySelector('.popup__description')
-  if (offer.description == '') {
+  if (!offer.description) {
     description.classList.add('hidden')
   } else {
     description.textContent = offer.description
@@ -97,7 +95,7 @@ const createCustomPopup = ({ author, offer }) => {
 
   const photosList = popupElement.querySelector('.popup__photos')
   photosList.innerHTML = ''
-  if (offer.photos.length == 0) {
+  if (!offer.photos) {
     photosList.classList.add('hidden')
   } else {
     offer.photos.forEach(src => {
@@ -109,25 +107,6 @@ const createCustomPopup = ({ author, offer }) => {
   return popupElement
 }
 
-// в цикле добавляем маркеры
-createData.forEach((point) => {
-  const { author, offer } = point
-  const coordinats = offer.location
-
-  const usualPinMarker = L.marker(
-    {
-      lat: coordinats.lat,
-      lng: coordinats.lng
-    },
-    {
-      icon: usualPinIcon
-    })
-
-  usualPinMarker
-    .addTo(markerGroup)
-    .bindPopup(createCustomPopup(point))
-})
-
 function setStartCoordinats () {
   mainPinMarker.setLatLng({
     lat: 35.6895,
@@ -137,8 +116,34 @@ function setStartCoordinats () {
     lat: 35.6895,
     lng: 139.692
   }, 12)
+  console.log();
+  const { lat, lng } = coordinats
+  let stringCoordinats = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
+  document.querySelector('input[name="address"]').value =stringCoordinats
 }
-// setStartCoordinats()
+
 export { setStartCoordinats }
 
 // markerGroup.clearLayers();
+//функция добавления маркеров и балунов из даты с сервера
+function addMarkersToMaps(data){
+  data.forEach((point) => {
+    const { author,location, offer } = point
+   
+    const usualPinMarker = L.marker(
+      {
+        lat: point.location.lat,
+        lng: point.location.lng
+      },
+      {
+        icon: usualPinIcon
+      })
+      //добавление группы маркеров и создание балунов к ним
+    usualPinMarker
+      .addTo(markerGroup)
+      .bindPopup(createCustomPopup(point))
+  })
+}
+export {addMarkersToMaps}
+
+

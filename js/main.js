@@ -1,15 +1,10 @@
-import { creatingUnactiveState } from '../../../../../js/state.js'
-import '../../../../../js/render.js'
-import '../../../../../js/form.js'
-import '../../../../../js/map.js'
-import '../../../../../js/range.js'
-import '../../../../../js/api.js'
+import {getData} from './api.js'
+import { addMarkersToMaps } from './map.js'
+import { showAlert } from "./util.js";
+import './form.js'
+import { creatingUnactiveState } from './state.js';
+// creatingUnactiveState()
+// window.addEventListener('load', creatingUnactiveState)
+getData(addMarkersToMaps, showAlert)
 
-import {getData} from '../../../../../js/api.js'
-function onSuccess1(data){
-  console.log(data);
-}
-function onError1(err){
-  console.log(err);
-}
-getData(onSuccess1, onError1)
+

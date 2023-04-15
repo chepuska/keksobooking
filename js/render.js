@@ -1,4 +1,4 @@
-import { createData } from '../../../../../js/generat.js'
+// import { createData } from '../../../../../js/generat.js'
 import { getEndingRooms, getEndingGuests, getType, getFeaturesList } from '../../../../../js/util.js'
 
 const placeInsertCard = document.querySelector('#map-canvas')
@@ -17,7 +17,7 @@ function createArticle (data) {
   const type = fragment.querySelector('.popup__type')
   const title = fragment.querySelector('.popup__title')
   const price = fragment.querySelector('.popup__text--price ')
-  // const featuresContainer = fragment.querySelector('.popup__features')
+
   const featuresItems = fragment.querySelectorAll('.popup__feature')
   const time = fragment.querySelector('.popup__text--time')
 
@@ -44,7 +44,7 @@ function createArticle (data) {
   return fragment
 }
 
-const result = createData.map(createArticle)
+// const result = createData.map(createArticle)
 // const ad = placeInsertCard.append(result[5])
 
-export { result }
+// export { result }
