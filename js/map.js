@@ -1,10 +1,11 @@
-import { creatingUnactiveState, creatingActiveState } from './state.js'
+import { creatingActiveState } from './state.js'
 import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js'
 
-async creatingUnactiveState()
-
+// activeState()
+// activate deactivate
+console.log('DO MAP')
 const map = new L.map('map-canvas')
-await map.on('load', () => {
+map.on('load', () => {
     creatingActiveState()
   })
   .setView({

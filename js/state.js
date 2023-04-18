@@ -1,5 +1,6 @@
 
-function creatingUnactiveState () {
+function deactivate () {
+  console.log('deactivate')
   const adForm = document.querySelector('.ad-form')
   adForm.classList.add('ad-form--disabled')
 
@@ -17,6 +18,7 @@ function creatingUnactiveState () {
 }
 
 function creatingActiveState () {
+  console.log('activate')
   const adForm = document.querySelector('.ad-form')
   adForm.classList.remove('ad-form--disabled')
 
@@ -32,9 +34,9 @@ function creatingActiveState () {
 
   document.querySelector('.map__features').removeAttribute('disabled')
 }
-creatingUnactiveState()
 
-export { creatingUnactiveState }
+
+export { deactivate }
 export { creatingActiveState }
 // Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;
 // Все интерактивные элементы формы .ad-form должны быть заблокированы с помощью атрибута disabled, добавленного на них или на их родительские блоки fieldset. Слайдер также должен быть заблокирован;
