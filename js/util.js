@@ -191,6 +191,13 @@ function onSuccess(data){
 function onError(err){
   console.log(err);
 }
+
+//функция проверки загруженного файла на нужный тип
+const FILE__TYPES =['jpg', 'jpeg', 'png', 'gif'];
+function isValidateTypeFile(file){
+  return FILE__TYPES.some((it)=>file.endsWith(it));
+}
+export {isValidateTypeFile}
 export {showSuccess, showErrorPopup, showAlert}
 export {onSuccess, onError, dataArray}
 // импортируем в generat.js

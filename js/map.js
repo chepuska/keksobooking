@@ -1,17 +1,17 @@
-import { creatingActiveState } from './state.js'
-import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js'
+import { creatingActiveState } from './state.js';
+import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js';
 
 // activeState()
 // activate deactivate
-console.log('DO MAP')
-const map = new L.map('map-canvas')
+console.log('DO MAP');
+const map = new L.map('map-canvas');
 map.on('load', () => {
-    creatingActiveState()
+    creatingActiveState();
   })
   .setView({
     lat: 35.6895,
     lng: 139.692
-  }, 12)
+  }, 12);
 
 
 // активируем тайлы для отображения определенных карт
@@ -40,10 +40,10 @@ const mainPinMarker = L.marker({
 mainPinMarker.addTo(map)
 
 // запись локации Токио - как главной метки при загрузке
-const coordinats = mainPinMarker.getLatLng()
-const { lat, lng } = coordinats
+const coordinats = mainPinMarker.getLatLng();
+const { lat, lng } = coordinats;
 let stringCoordinats = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
-document.querySelector('[name=\'address\']').value = stringCoordinats
+document.querySelector('[name=\'address\']').value = stringCoordinats;
 // при перемещении главной метки координаты передаются в инпут для отправки формы на сервер
 mainPinMarker.on('moveend', (evt) => {
   const currentCoordinats = evt.target.getLatLng()
