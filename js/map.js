@@ -1,6 +1,7 @@
 import { creatingActiveState } from './state.js';
 import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js';
-
+// import { compareTypeHousing } from './filters.js';
+// import { getSuitableArticleToOptions } from './filters.js';
 // activeState()
 // activate deactivate
 console.log('DO MAP');
@@ -128,6 +129,8 @@ export { setStartCoordinats }
 // markerGroup.clearLayers();
 //функция добавления маркеров и балунов из даты с сервера
 function addMarkersToMaps(data){
+  markerGroup.clearLayers();
+  // data.slice().sort(compareTypeHousing).slice(0, 5).forEach((point)=>{
   data.forEach((point) => {
     const { author,location, offer } = point
    

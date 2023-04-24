@@ -1,3 +1,4 @@
+// import { getArticlesValue, getSuitableArticleToOptions } from "./filters.js";
 let dataArray =[]
 function getData(onSuccess, onError){
   fetch(
@@ -15,6 +16,11 @@ function getData(onSuccess, onError){
   .then((data)=>{
     onSuccess(data);
     dataArray =data;
+    console.log(data);
+//
+
+//
+
   })
   .catch((err)=>{
     const textError ='Что-то пошло не так, перегрузите страницу';
