@@ -197,6 +197,15 @@ const FILE__TYPES =['jpg', 'jpeg', 'png', 'gif'];
 function isValidateTypeFile(file){
   return FILE__TYPES.some((it)=>file.endsWith(it));
 }
+
+function debounce(callback, timeoutDelay) {
+  let timeoutId;
+  return (...rest)=>{
+    clearTimeout(timeoutId);
+    timeoutId =setTimeout(()=>callback.apply(this, rest), timeoutDelay)
+  }
+}
+export {debounce}
 export {isValidateTypeFile}
 export {showSuccess, showErrorPopup, showAlert}
 export {onSuccess, onError, dataArray}

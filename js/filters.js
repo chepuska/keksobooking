@@ -8,19 +8,12 @@ function getRankFeatures(object){
 }
 
 function sortByAmountFeatures(object1, object2) {
-    let rankObject1 = getRankFeatures(object1)
-    
+  let rankObject1 = getRankFeatures(object1)
   let rankObject2 = getRankFeatures(object2)
+  
   if(rankObject1 && rankObject2){
-    console.log('rankObject1 : '+rankObject1);
-    console.log('rankObject2 : '+rankObject2);
     return rankObject2-rankObject1
-  }else{
-    return
   }
-  
-  
-  
 }
 
   const mapFiltersForm =document.querySelector('.map__filters')
@@ -37,7 +30,6 @@ function filterData (data) {
       return feature.value
     }
   }).filter(i=>i!==undefined)
-  console.log('featureChecked :' +featureChecked);
 
   return data
     .filter(i => housingType === 'any' || i.offer.type === housingType)
@@ -60,7 +52,6 @@ function filterData (data) {
       let featuresArray = i.offer.features;
       return (featuresArray && featureChecked.every(j=>featuresArray.includes(j)))
     })
-    
     .slice(0, ARTICLE__COUNT)
 }
 

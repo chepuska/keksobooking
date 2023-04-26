@@ -124,13 +124,12 @@ function setStartCoordinats () {
   document.querySelector('input[name="address"]').value =stringCoordinats
 }
 
-export { setStartCoordinats }
 
-// markerGroup.clearLayers();
+
 //функция добавления маркеров и балунов из даты с сервера
 function addMarkersToMaps(data){
   markerGroup.clearLayers();
-  // data.slice().sort(compareTypeHousing).slice(0, 5).forEach((point)=>{
+
   data.forEach((point) => {
     const { author,location, offer } = point
    
@@ -148,6 +147,6 @@ function addMarkersToMaps(data){
       .bindPopup(createCustomPopup(point))
   })
 }
+
 export {addMarkersToMaps}
-
-
+export { setStartCoordinats }

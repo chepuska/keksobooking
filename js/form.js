@@ -198,7 +198,6 @@ setUploadFormSubmit(setStartCoordinats)
 
 // функция сброса значений полей формы до начальных значений. Начало.
 
-
 const resetButton =document.querySelector('.ad-form__reset')
 
 //хэндлер для сброса данных формы
@@ -277,6 +276,5 @@ function resetValuesInForm(){
 }
 
 // функция сброса значений полей формы до начальных значений. Конец.
-
 
 initSlider(pristineAdForm.validate)
