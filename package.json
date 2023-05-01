@@ -2,7 +2,7 @@
   "name": "keksobooking",
   "version": "25.0.0",
   "private": true,
-  "description": "Личный проект «{{projectTitle}}» от HTML Academy",
+  "description": "Личный проект «Keksobooking» от HTML Academy",
   "repository": {
     "type": "git",
     "url": "{{sshUrl}}"
@@ -12,12 +12,12 @@
   },
   "devDependencies": {
     "browser-sync": "2.27.7",
-    "eslint": "^8.33.0",
+    "eslint": "8.33.0",
     "eslint-config-htmlacademy": "5.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.6.1",
-    "eslint-plugin-promise": "^6.1.1"
+    "eslint-config-standard": "17.0.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-n": "15.6.1",
+    "eslint-plugin-promise": "6.1.1"
   },
   "license": "MIT",
   "scripts": {

@@ -11,5 +11,10 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-  }
+  },
+  "globals": {
+  "L": true,
+  "Pristine": true,
+  "noUiSlider": true,
+  },
 }

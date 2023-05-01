@@ -1,62 +1,60 @@
+console.log('filters')
+const ARTICLE_COUNT = 10
+const mapFiltersForm = document.querySelector('.map__filters')
 
-const ARTICLE__COUNT =10;
-
-function getRankFeatures(object){
-  if(object.offer.features){
+const getRankFeatures = (object) => {
+  if (object.offer.features) {
     return object.offer.features.length
   }
 }
+// функция сортировки по количеству features
+const sortByAmountFeatures = (object1, object2) => {
+  const rankObject1 = getRankFeatures(object1)
+  const rankObject2 = getRankFeatures(object2)
 
-function sortByAmountFeatures(object1, object2) {
-  let rankObject1 = getRankFeatures(object1)
-  let rankObject2 = getRankFeatures(object2)
-  
-  if(rankObject1 && rankObject2){
-    return rankObject2-rankObject1
+  if (rankObject1 && rankObject2) {
+    return rankObject2 - rankObject1
   }
 }
 
-  const mapFiltersForm =document.querySelector('.map__filters')
-
-function filterData (data) {
+const filterData = (data) => {
   const housingType = mapFiltersForm.querySelector('select[name="housing-type"]').value
   const price = mapFiltersForm.querySelector('select[name="housing-price"]').value
-  let rooms  = mapFiltersForm.querySelector('select[name="housing-rooms"]').value
-  let guests = mapFiltersForm.querySelector('select[name="housing-guests"]').value
-  let features = mapFiltersForm.querySelectorAll('input[name="features"]')
-  //получаем массив отмеченных features
-  let featureChecked = Array.from(features).map((feature)=>{
-    if(feature.checked){
-      return feature.value
-    }
-  }).filter(i=>i!==undefined)
+  const rooms = mapFiltersForm.querySelector('select[name="housing-rooms"]').value
+  const guests = mapFiltersForm.querySelector('select[name="housing-guests"]').value
+  const features = mapFiltersForm.querySelectorAll('input[name="features"]')
+  // получаем массив отмеченных features
+  const featureChecked = Array.from(features)
+    .filter(feature => feature.checked)
+    .map((feature) => feature.value)
 
   return data
     .filter(i => housingType === 'any' || i.offer.type === housingType)
     .filter(i => {
-      if(price ==='any'){
-        return true;
-      }else if(price==='middle'){
-        return i.offer.price >= 10000 && i.offer.price <=50000;
-      }else if(price === 'low'){
-        return i.offer.price < 10000;
-      }else if(price ==='high'){
-        return i.offer.price > 50000;
+      if (price === 'any') {
+        return true
+      } else if (price === 'middle') {
+        return i.offer.price >= 10000 && i.offer.price <= 50000
+      } else if (price === 'low') {
+        return i.offer.price < 10000
+      } else if (price === 'high') {
+        return i.offer.price > 50000
       }
+      return false
     })
-    .filter ((i) => rooms === 'any' || i.offer.rooms === +rooms)
-    .filter((i) => guests ==='any' || i.offer.guests === +guests) 
+    .filter((i) => rooms === 'any' || i.offer.rooms === +rooms)
+    .filter((i) => guests === 'any' || i.offer.guests === +guests)
     .slice()
     .sort(sortByAmountFeatures)
-    .filter((i)=>{
-      let featuresArray = i.offer.features;
-      return (featuresArray && featureChecked.every(j=>featuresArray.includes(j)))
+    .filter((i) => {
+      const featuresArray = i.offer.features
+      return (featuresArray && featureChecked.every(j => featuresArray.includes(j)))
     })
-    .slice(0, ARTICLE__COUNT)
+    .slice(0, ARTICLE_COUNT)
 }
 
-function initFilters (cb) {
-  const typeHosting =mapFiltersForm.querySelector('select[name="housing-type"]')
+const initFilters = (cb) => {
+  const typeHosting = mapFiltersForm.querySelector('select[name="housing-type"]')
   const price = mapFiltersForm.querySelector('select[name="housing-price"]')
   const rooms = mapFiltersForm.querySelector('select[name="housing-rooms"]')
   const guests = mapFiltersForm.querySelector('select[name="housing-guests"]')
@@ -64,7 +62,8 @@ function initFilters (cb) {
   typeHosting.addEventListener('change', cb)
   price.addEventListener('change', cb)
   rooms.addEventListener('change', cb)
-  features.forEach((i)=>i.addEventListener('change', cb))
+  guests.addEventListener('change', cb)
+  features.forEach((i) => i.addEventListener('change', cb))
 }
 
-export {initFilters, filterData}
+export { initFilters, filterData }

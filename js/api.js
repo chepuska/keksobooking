@@ -1,50 +1,46 @@
-// import { getArticlesValue, getSuitableArticleToOptions } from "./filters.js";
-let dataArray =[]
-function getData(onSuccess, onError){
+import { deactivate } from './state.js'
+
+console.log('api')
+deactivate()
+
+const getData = (onSuccess, onError) => {
   fetch(
     'https://25.javascript.pages.academy/keksobooking/data',
     {
       method: 'GET',
-      credentials: 'same-origin',
+      credentials: 'same-origin'
     }
-  ).then((response)=>{
-    if(response.ok){
+  ).then((response) => {
+    if (response.ok) {
       return response.json()
     }
-    throw new Error(`${response.status} ${response.text}`);
+    throw new Error(`${response.status} ${response.text}`)
   })
-  .then((data)=>{
-    onSuccess(data);
-    dataArray =data;
-    console.log(data);
-//
-
-//
-
-  })
-  .catch((err)=>{
-    const textError ='Что-то пошло не так, перегрузите страницу';
-    onError(textError);
-    console.log(err);
-  });
+    .then((data) => {
+      onSuccess(data)
+      console.log(data)
+    })
+    .catch((err) => {
+      const textError = 'Что-то пошло не так, перегрузите страницу'
+      onError(textError)
+      console.log(err)
+    })
 }
 
-function sendData(onSuccess, onFail, body){
+const sendData = (onSuccess, onFail, body) => {
   fetch(
     'https://25.javascript.pages.academy/keksobooking',
     {
-      method: "POST",
+      method: 'POST',
       body
     }
-  ).then((response)=>{
-    if(response.ok){
+  ).then((response) => {
+    if (response.ok) {
       onSuccess()
-    }else{
+    } else {
       onFail()
     }
-    
-  }).catch(()=>onFail())
+  }).catch(() => onFail())
 }
 
-export {getData, sendData}
-
+export { getData, sendData }
