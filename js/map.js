@@ -1,11 +1,9 @@
-import { activate } from './state.js'
+import { activateAdForm } from './state.js'
 import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js'
-
-console.log('DO MAP')
 
 const map = L.map('map-canvas')
 map.on('load', () => {
-  // activate()
+  activateAdForm()
 })
   .setView({
     lat: 35.6895,

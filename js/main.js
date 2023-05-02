@@ -1,13 +1,11 @@
-
 import { setUploadFormSubmit } from './form.js'
 import { getData } from './api.js'
 import { showAlert, debounce } from './util.js'
 import { initFilters, filterData } from './filters.js'
 import { addMarkersToMaps, setStartCoordinats } from './map.js'
 
-console.log('main')
-
 const RERENDER_DELAY = 500
+
 getData((data) => {
   addMarkersToMaps(data)
 

@@ -1,21 +1,16 @@
-console.log('filters')
 const ARTICLE_COUNT = 10
 const mapFiltersForm = document.querySelector('.map__filters')
 
-const getRankFeatures = (object) => {
+const getRankFeatures = (object, selected) => {
   if (object.offer.features) {
-    return object.offer.features.length
+    return object.offer.features
+      .map(f => selected.includes(f) ? 10 : 1)
+      .reduce((acc, i) => acc + i, 0)
   }
+  return 0
 }
 // функция сортировки по количеству features
-const sortByAmountFeatures = (object1, object2) => {
-  const rankObject1 = getRankFeatures(object1)
-  const rankObject2 = getRankFeatures(object2)
-
-  if (rankObject1 && rankObject2) {
-    return rankObject2 - rankObject1
-  }
-}
+const compareFeatures = (object1, object2, selectedFeatures) => getRankFeatures(object2, selectedFeatures) - getRankFeatures(object1, selectedFeatures)
 
 const filterData = (data) => {
   const housingType = mapFiltersForm.querySelector('select[name="housing-type"]').value
@@ -45,11 +40,7 @@ const filterData = (data) => {
     .filter((i) => rooms === 'any' || i.offer.rooms === +rooms)
     .filter((i) => guests === 'any' || i.offer.guests === +guests)
     .slice()
-    .sort(sortByAmountFeatures)
-    .filter((i) => {
-      const featuresArray = i.offer.features
-      return (featuresArray && featureChecked.every(j => featuresArray.includes(j)))
-    })
+    .sort((a, b) => compareFeatures(a, b, featureChecked))
     .slice(0, ARTICLE_COUNT)
 }
 

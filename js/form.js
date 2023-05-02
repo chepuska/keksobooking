@@ -67,15 +67,13 @@ const resetValuesInForm = () => {
 // валидирование полей формы, инициация Pristine. НАЧАЛО
 const defaultConfig = {
   // class of the parent element where the error/success class is added
-  classTo: 'ad-form__element',
+  classTo: 'message-error',
   errorClass: 'has-danger',
   successClass: 'has-success',
   // class of the parent element where error text element is appended
-  errorTextParent: 'ad-form__element',
+  errorTextParent: 'message-error',
   // type of element to create for the error text
-  errorTextTag: 'div',
-  // class of the error text element
-  errorTextClass: 'has-danger'
+  errorTextTag: 'div'
 }
 
 const complianceHostingPrice = [
@@ -100,6 +98,7 @@ const timeout = adForm.querySelector('select[name="timeout"]')
 const rooms = adForm.querySelector('[name="rooms"]')
 const capacity = adForm.querySelector('[name="capacity"]')
 const featuresCheckbox = adForm.querySelectorAll('input[name="feature"]')
+
 // изменение типа жилья приводит к изменению плэйсхолдера мин-прайс
 const getSelectedHousingType = _ => complianceHostingPrice.find(i => typeHosting.value === i[0])
 
@@ -115,7 +114,7 @@ typeHosting.addEventListener('change', () => {
 
 const validateComplianceTypeHostMinPrice = (value) => {
   const housingType = getSelectedHousingType()
-  return housingType !== undefined && value > housingType[2]
+  return housingType !== undefined && value >= housingType[2]
 }
 
 // функция получения сообщения об ошибке по типу жилья
@@ -232,7 +231,6 @@ const setUploadFormSubmit = (success) => {
         },
         formdata)
     } else {
-      // showErrorPopup()
       evt.preventDefault()
       pristineAdForm.validate()
     }

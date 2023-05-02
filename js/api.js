@@ -1,7 +1,6 @@
-import { deactivate } from './state.js'
+import { activateMapFilters, deactivateAdForm, deactivateMapFilters } from './state.js'
 
-console.log('api')
-deactivate()
+deactivateAdForm()
 
 const getData = (onSuccess, onError) => {
   fetch(
@@ -18,11 +17,12 @@ const getData = (onSuccess, onError) => {
   })
     .then((data) => {
       onSuccess(data)
-      console.log(data)
+      activateMapFilters()
     })
     .catch((err) => {
       const textError = 'Что-то пошло не так, перегрузите страницу'
       onError(textError)
+      deactivateMapFilters()
       console.log(err)
     })
 }

@@ -1,61 +1,5 @@
-console.log('util')
 const ALERT_SHOW_TIME = 5000
 const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif']
-// Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно. Будет использоваться для генерации временных географических координат в следующем задании. Пример использования функции:
-const getRandomPositiveInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)))
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)))
-  const result = Math.random() * (upper - lower + 1) + lower
-  return Math.floor(result)
-}
-
-// функция(от, до, количество_знаков_после_запятой); // Результат: число с плавающей точкой из диапазона "от...до" с указанным "количеством знаков после запятой"
-const getRandomPositiveFloat = (a, b, digits = 1) => {
-  const lower = Math.min(Math.abs(a), Math.abs(b))
-  const upper = Math.max(Math.abs(a), Math.abs(b))
-  const result = Math.random() * (upper - lower) + lower
-  return +result.toFixed(digits)
-}
-
-// массив чисел  от 1 до 10. Перед однозначными числами ставится 0. Например, 01, 02...10. Адреса изображений не повторяются.
-const getAuthorAvatar = () => {
-  const ArrAvatars = new Set()
-  let str = ''
-  do {
-    str = getRandomPositiveInteger(1, 10)
-    str = str < 10 ? `0${str}` : String(str)
-    ArrAvatars.add(str)
-  } while (ArrAvatars.size < 10)
-
-  return [...ArrAvatars]
-}
-
-//  функция генерация рандомного индекса для массива
-const getRandomValue = (arr) => {
-  return arr[getRandomPositiveInteger(0, arr.length - 1)]
-}
-
-const getRandomFeatures = (features) => {
-  const setFeatures = new Set()
-  do {
-    const feature = getRandomValue(features)
-    setFeatures.add(feature)
-  } while (setFeatures.size < getRandomPositiveInteger(1, features.length - 1))
-  return [...setFeatures]
-}
-
-// генерация адреса фотографии
-const getRandomPhotos = (photos) => {
-  let photo
-  const index = getRandomPositiveInteger(1, 10)
-  const array = []
-  do {
-    photo = getRandomValue(photos)
-    array.push(photo)
-  } while (array.length < index)
-  return array
-}
-
 const getEndingRooms = (amount) => {
   switch (amount) {
     case 1:
@@ -211,12 +155,6 @@ const debounce = (callback, timeoutDelay) => {
 export { debounce }
 export { isValidateTypeFile }
 export { showSuccess, showErrorPopup, showAlert }
-export { getRandomPositiveInteger }
-export { getRandomPositiveFloat }
-export { getAuthorAvatar }
-export { getRandomValue }
-export { getRandomFeatures }
-export { getRandomPhotos }
 export { getEndingRooms }
 export { getEndingGuests }
 export { getType }
