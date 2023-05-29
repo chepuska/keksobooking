@@ -184,6 +184,7 @@ const setUploadFormSubmit = (success) => {
       cleanPreview()
       resetValueSlider()
       removeMarkerPopup()
+      pristineAdForm.reset()
       //
     } else {
       evt.preventDefault()

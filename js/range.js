@@ -39,7 +39,6 @@ const updateValueSlider = () => {
 const resetValueSlider = () => {
   sliderElement.noUiSlider.set(0)
   if (validateCallback !== undefined) { validateCallback() }
-  valueElement.value = MIN_PRICE
   valueElement.placeholder = MIN_PRICE
 }
 
