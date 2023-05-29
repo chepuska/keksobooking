@@ -1,14 +1,34 @@
-import { activateAdForm } from './state.js'
-import { getType, getEndingGuests, getEndingRooms, getFeaturesList } from './util.js'
+import { activateAdForm, activateMapFilters } from './state.js'
+import { getData } from './api.js'
+import { initFilters, filterData } from './filters.js'
+import { OFFERS_COUNT, RERENDER_DELAY } from './constants.js'
+import { getType, getEndingGuests, getEndingRooms, getFeaturesList, showAlert, debounce } from './util.js'
 
+const START_ZOOM = 12
+const START_LAT_COORDINAT = 35.68950
+const START_LNG_COORDINATS = 139.69200
 const map = L.map('map-canvas')
+const addressElement = document.querySelector('input[name="address"]')
+
 map.on('load', () => {
   activateAdForm()
+
+  getData((data) => {
+    const offers = data.slice(0, OFFERS_COUNT)
+    addMarkersToMaps(offers)
+    activateMapFilters()
+    initFilters(
+      debounce(
+        () => { addMarkersToMaps(filterData(data)) },
+        RERENDER_DELAY
+      )
+    )
+  }, showAlert)
 })
   .setView({
-    lat: 35.6895,
-    lng: 139.692
-  }, 12)
+    lat: START_LAT_COORDINAT,
+    lng: START_LNG_COORDINATS
+  }, START_ZOOM)
 
 // активируем тайлы для отображения определенных карт
 L.tileLayer(
@@ -25,8 +45,8 @@ const mainPinIcon = L.icon({
 })
 // ставим маркер в центр Токио
 const mainPinMarker = L.marker({
-  lat: 35.6895,
-  lng: 139.692
+  lat: START_LAT_COORDINAT,
+  lng: START_LNG_COORDINATS
 },
 {
   draggable: true,
@@ -44,7 +64,7 @@ document.querySelector('[name=\'address\']').value = stringCoordinats
 mainPinMarker.on('moveend', (evt) => {
   const currentCoordinats = evt.target.getLatLng()
   stringCoordinats = `${currentCoordinats.lat.toFixed(5)}, ${currentCoordinats.lng.toFixed(5)}`
-  document.querySelector('input[name="address"]').value = stringCoordinats
+  addressElement.value = stringCoordinats
 })
 
 // создать слой и добавить его на карту
@@ -58,16 +78,15 @@ const usualPinIcon = L.icon({
 })
 // функция создания кастомного балуна
 const createCustomPopup = ({ author, location, offer }) => {
-  const balloonTemplate = document.querySelector('#card').content.querySelector('.popup')
-  const popupElement = balloonTemplate.cloneNode(true)
+  const popupElement = document.querySelector('#card').content.querySelector('.popup').cloneNode(true)
 
   popupElement.querySelector('.popup__avatar').src = author.avatar
 
   popupElement.querySelector('.popup__title').textContent = offer.title
 
   popupElement.querySelector('.popup__text--address').textContent = offer.address
-
-  popupElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`
+  const price = popupElement.querySelector('.popup__text--price')
+  price.innerHTML = `${offer.price} <span>₽/ночь</span>`
 
   popupElement.querySelector('.popup__type').textContent = getType(offer.type)
 
@@ -103,18 +122,18 @@ const createCustomPopup = ({ author, location, offer }) => {
   return popupElement
 }
 
-function setStartCoordinats () {
+const setStartCoordinats = () => {
   mainPinMarker.setLatLng({
-    lat: 35.6895,
-    lng: 139.692
+    lat: START_LAT_COORDINAT,
+    lng: START_LNG_COORDINATS
   })
   map.setView({
-    lat: 35.6895,
-    lng: 139.692
-  }, 12)
+    lat: START_LAT_COORDINAT,
+    lng: START_LNG_COORDINATS
+  }, START_ZOOM)
   const { lat, lng } = coordinats
   const stringCoordinats = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
-  document.querySelector('input[name="address"]').value = stringCoordinats
+  addressElement.value = stringCoordinats
 }
 
 // функция добавления маркеров и балунов из даты с сервера
@@ -137,5 +156,13 @@ const addMarkersToMaps = (data) => {
   })
 }
 
+const removeMarkerPopup = () => {
+  const baloon = document.querySelector('.leaflet-popup')
+  if (baloon !== undefined && baloon !== null) {
+    baloon.remove()
+  }
+}
+
 export { addMarkersToMaps }
 export { setStartCoordinats }
+export { removeMarkerPopup }

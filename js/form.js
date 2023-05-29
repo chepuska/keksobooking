@@ -1,68 +1,22 @@
-import { sendData } from './api.js'
-import { setStartCoordinats } from './map.js'
+import { sendData, dataObjects } from './api.js'
+import { MAX_PRICE, MIN_PRICE, START_ADDRESS_AVATAR } from './constants.js'
+import { setStartCoordinats, removeMarkerPopup, addMarkersToMaps } from './map.js'
 import { initSlider, resetValueSlider } from './range.js'
 import './upload.js'
 import { showSuccess, showErrorPopup } from './util.js'
-
-// сброс всех значений из полей формы НАЧАЛО
-const resetValuesInForm = () => {
-  // сброс значения поля заголовка заголовка
-  const titleArticle = adForm.querySelector('input[name="title"]')
-  titleArticle.value = ''
-  typeHosting.value = 'flat'
-  price.value = 0
-  // сброс значений features
-  featuresCheckbox.forEach(i => {
-    if (i.checked === true) {
-      i.checked = false
-    }
-  })
-  // сброс на исходное timein
-  const timeinOption = timein.querySelectorAll('option')
-
-  timeinOption.forEach(option => {
-    if (option.value !== 12 && option.selected) {
-      option.selected = false
-    }
-  })
-  // timeout
-  const timeoutOption = timeout.querySelectorAll('option')
-  timeoutOption.forEach(option => {
-    if (option.value !== 12 && option.selected) {
-      option.selected = false
-    }
-  })
+import { filterData } from './filters.js'
+// сброс превью формы НАЧАЛО
+const cleanPreview = () => {
   // находим элементы загрузки аватара и фото
   const avatar = document.querySelector('.ad-form-header__preview img')
   const photoPreview = document.querySelector('.ad-form__photo img')
-  const uploadAvatarElement = document.querySelector('.ad-form-header__input')
-  const uploadImgElement = document.querySelector('.ad-form__input')
-  // очищаем поля загрузки файлов и превью картинок
-  uploadAvatarElement.value = ''
-  avatar.src = 'img/muffin-grey.svg'
-  uploadImgElement.value = ''
+  // очищаем  превью картинок
+  avatar.src = START_ADDRESS_AVATAR
   if (photoPreview) {
     photoPreview.remove()
   }
-  // rooms
-  const roomsOption = rooms.querySelectorAll('option')
-  roomsOption.forEach(option => {
-    if (option.selected && option.value !== 1) {
-      option.selected = false
-    }
-  })
-  // capacity
-  const capacityOption = capacity.querySelectorAll('option')
-  capacityOption.forEach(option => {
-    if (option.selected && option.value !== 3) {
-      option.selected = false
-    }
-  })
-  // description
-  const description = adForm.querySelector('textarea[name="description"]')
-  description.value = ''
 }
-// сброс всех значений из полей формы КОНЕЦ
+// сброс превью формы КОНЕЦ
 
 // валидирование полей формы, инициация Pristine. НАЧАЛО
 const defaultConfig = {
@@ -77,11 +31,11 @@ const defaultConfig = {
 }
 
 const complianceHostingPrice = [
-  ['palace', 'дворца', 10000],
-  ['flat', 'квартиры', 1000],
-  ['house', 'дома', 5000],
-  ['bungalow', 'бунгало', 0],
-  ['hotel', 'отеля', 3000]
+  ['palace', MAX_PRICE],
+  ['flat', MIN_PRICE],
+  ['house', 5000],
+  ['bungalow', 0],
+  ['hotel', 3000]
 ]
 const guestsRoomRatioOption = {
   1: ['1'],
@@ -89,7 +43,15 @@ const guestsRoomRatioOption = {
   3: ['1', '2', '3'],
   100: ['0']
 }
+const messagesCapacity = {
+  0: 'не бронируется для гостей',
+  1: 'невозможно забронировать для 1 гостя',
+  2: 'невозможно забронировать для 2 гостей',
+  3: 'невозможно забронировать для 3 гостей',
+  100: 'не бронируется для гостей'
+}
 const adForm = document.querySelector('.ad-form')
+const mapFiltersForm = document.querySelector('.map__filters')
 const pristineAdForm = new Pristine(adForm, defaultConfig)
 const price = adForm.querySelector('input[name="price"]')
 const typeHosting = adForm.querySelector('select[name="type"]')
@@ -97,7 +59,6 @@ const timein = adForm.querySelector('select[name="timein"]')
 const timeout = adForm.querySelector('select[name="timeout"]')
 const rooms = adForm.querySelector('[name="rooms"]')
 const capacity = adForm.querySelector('[name="capacity"]')
-const featuresCheckbox = adForm.querySelectorAll('input[name="feature"]')
 
 // изменение типа жилья приводит к изменению плэйсхолдера мин-прайс
 const getSelectedHousingType = _ => complianceHostingPrice.find(i => typeHosting.value === i[0])
@@ -105,23 +66,22 @@ const getSelectedHousingType = _ => complianceHostingPrice.find(i => typeHosting
 typeHosting.addEventListener('change', () => {
   const housingPrice = getSelectedHousingType()
   if (housingPrice !== undefined) {
-    price.placeholder = housingPrice[2]
-    price.min = housingPrice[2]
-    pristineAdForm.validate()
+    price.placeholder = housingPrice[1]
+    pristineAdForm.validate(price)
   }
 })
 // Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
 
 const validateComplianceTypeHostMinPrice = (value) => {
   const housingType = getSelectedHousingType()
-  return housingType !== undefined && value >= housingType[2]
+  return housingType !== undefined && value >= housingType[1]
 }
 
 // функция получения сообщения об ошибке по типу жилья
 const getErrorComplainceHostPrice = () => {
   const housingType = getSelectedHousingType()
   if (housingType !== undefined) {
-    return `Минимальная стоимость ${housingType[1]} не меньше ${housingType[2]}`
+    return `Минимальная стоимость не меньше ${housingType[1]}`
   } else {
     return 'Неизвестный тип жилья' // Не должны попасть сюда никогда
   }
@@ -136,7 +96,7 @@ pristineAdForm.addValidator(
 
 // валидация поля price
 const validateFieldPrice = (value) => {
-  return value <= 100000
+  return value <= MAX_PRICE
 }
 pristineAdForm.addValidator(price, validateFieldPrice, 'цена должна быть меньше 100000 рублей', 3, false)
 
@@ -162,31 +122,20 @@ const getGuestsRoomRatio = () => {
 }
 
 // функция получения текста ошибки по соответствию количества комнат и гостей
+
 const getRoomCapacityRatioErrorMessage = () => {
   let str = ''
-  guestsRoomRatioOption[rooms.value].filter(i => {
-    if (i !== capacity.value) {
-      if (capacity.value === 1) {
-        str = 'невозможно забронировать для 1 гостя'
-      }
-      if (capacity.value === 2 || capacity.value === 3) {
-        str = `невозможно забронировать для ${capacity.value} гостей`
-      }
-      if (capacity.value !== 0 && rooms.value !== 100) {
-        str = 'не бронируется для гостей'
-      }
-    } else {
-      str = ''
+  guestsRoomRatioOption[rooms.value].forEach(() => {
+    if (!getGuestsRoomRatio()) {
+      str = messagesCapacity[capacity.value]
     }
-    return str
   })
-
   return str
 }
 
 rooms.addEventListener('change', () => {
   getRoomCapacityRatioErrorMessage()
-  pristineAdForm.validate()
+  pristineAdForm.validate(rooms)
 })
 
 pristineAdForm.addValidator(rooms, getGuestsRoomRatio, '', 2, false)
@@ -195,12 +144,12 @@ pristineAdForm.addValidator(capacity, getGuestsRoomRatio, getRoomCapacityRatioEr
 
 // функции блокировки И разблокировки кнопки при отправке
 const submitButton = document.querySelector('.ad-form__submit')
-const onBlockSubmitButton = () => {
+const blockSubmitButton = () => {
   submitButton.disabled = true
   submitButton.textContent = 'Сохраняю...'
 }
 
-const onUnblockSubmitButton = () => {
+const unblockSubmitButton = () => {
   submitButton.disabled = false
   submitButton.textContent = 'Опубликовать'
 }
@@ -210,29 +159,34 @@ const setUploadFormSubmit = (success) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault()
 
-    const isValidate = pristineAdForm.validate()
+    const isValid = pristineAdForm.validate()
     const formdata = new FormData(evt.target)
 
-    if (isValidate) {
-      onBlockSubmitButton()
+    if (isValid) {
+      blockSubmitButton()
       // собираем данные в форму и отправляем на сервер
       sendData(
         () => {
           success()
           showSuccess()
-          onUnblockSubmitButton()
-          // сброс всех значений формы и карты
-          resetValueSlider()
-          resetValuesInForm()
+          unblockSubmitButton()
         },
         () => {
           showErrorPopup()
-          onUnblockSubmitButton()
+          unblockSubmitButton()
         },
         formdata)
+      // очистка полей формы, слайдера, превью, координат, закрытие балуна, очистка формы фильтров и перерисовка меток
+      adForm.reset()
+      mapFiltersForm.reset()
+      addMarkersToMaps(filterData(dataObjects))
+      setStartCoordinats()
+      cleanPreview()
+      resetValueSlider()
+      removeMarkerPopup()
+      //
     } else {
       evt.preventDefault()
-      pristineAdForm.validate()
     }
   })
 }
@@ -241,14 +195,16 @@ const resetButton = document.querySelector('.ad-form__reset')
 
 // хэндлер для сброса данных формы
 resetButton.addEventListener('click', () => {
-  // сброс координат на исходные
+  mapFiltersForm.reset()
+  addMarkersToMaps(filterData(dataObjects))
   setStartCoordinats()
-  // обнуление слайдера
+  cleanPreview()
   resetValueSlider()
-  // сброс на исходные всех инпутов формы
-  resetValuesInForm()
+  removeMarkerPopup()
+  pristineAdForm.reset()
 })
+
 // setUploadFormSubmit(setStartCoordinats);
-initSlider(pristineAdForm.validate)
+initSlider(_ => pristineAdForm.validate(price))
 
 export { setUploadFormSubmit }

@@ -1,10 +1,13 @@
-import { activateMapFilters, deactivateAdForm, deactivateMapFilters } from './state.js'
-
+import { deactivateAdForm, deactivateMapFilters } from './state.js'
+import { URL } from './constants.js'
 deactivateAdForm()
+deactivateMapFilters()
+
+let dataObjects
 
 const getData = (onSuccess, onError) => {
   fetch(
-    'https://25.javascript.pages.academy/keksobooking/data',
+    URL + '/data',
     {
       method: 'GET',
       credentials: 'same-origin'
@@ -16,8 +19,8 @@ const getData = (onSuccess, onError) => {
     throw new Error(`${response.status} ${response.text}`)
   })
     .then((data) => {
+      dataObjects = data
       onSuccess(data)
-      activateMapFilters()
     })
     .catch((err) => {
       const textError = 'Что-то пошло не так, перегрузите страницу'
@@ -29,7 +32,7 @@ const getData = (onSuccess, onError) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://25.javascript.pages.academy/keksobooking',
+    URL,
     {
       method: 'POST',
       body
@@ -43,4 +46,4 @@ const sendData = (onSuccess, onFail, body) => {
   }).catch(() => onFail())
 }
 
-export { getData, sendData }
+export { getData, sendData, dataObjects }

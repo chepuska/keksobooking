@@ -102,7 +102,7 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--wide message-error">
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
-          <input id="address" name="address" type="text"  readonly value="Это поле только для чтения">
+          <input id="address" name="address" type="text"  readonly value="35.68950, 139.69200">
         </fieldset>
         <fieldset class="ad-form__element message-error">
           <label class="ad-form__label" for="type">Тип жилья</label>
@@ -116,7 +116,7 @@
         </fieldset>
         <fieldset class="ad-form__element message-error">
           <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-          <input id="price" name="price" type="number" placeholder="5000" min="0" data-pristine-required data-pristine-required-message="обязательно к заполнению">
+          <input id="price" name="price" type="number" placeholder="1000" min="0" data-pristine-required data-pristine-required-message="обязательно к заполнению">
           <div class="ad-form__slider"></div>
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--time message-error">
@@ -173,7 +173,7 @@
           <label class="ad-form__label">Фотография жилья</label>
           <div class="ad-form__photo-container">
             <div class="ad-form__upload">
-              <input type="file" id="images" name="images" class="ad-form__input visually-hidden" accept="image/jpg, image/jpeg, image/png, image/gif" required data-pristine-required  data-pristine-required-message="Нужно загрузить фото жилья">
+              <input type="file" id="images" name="images" class="ad-form__input visually-hidden" accept="image/jpg, image/jpeg, image/png, image/gif">
               <label for="images" class="ad-form__drop-zone">Загрузить<br>фото...</label>
             </div>
             <div class="ad-form__photo"></div>
@@ -181,7 +181,7 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--submit">
           <button class="ad-form__submit" type="submit">Опубликовать</button>
-          или <button class="ad-form__reset" type="button">очистить</button>
+          или <button class="ad-form__reset" type="reset">очистить</button>
         </fieldset>
       </form>
     </section>

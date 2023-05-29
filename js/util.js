@@ -1,5 +1,7 @@
-const ALERT_SHOW_TIME = 5000
+import { ALERT_SHOW_TIME } from './constants.js'
 const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif']
+const templateError = document.querySelector('#error')
+const templateSuccess = document.querySelector('#success')
 const getEndingRooms = (amount) => {
   switch (amount) {
     case 1:
@@ -53,9 +55,10 @@ const isEscapeKey = (evt) => evt.key === 'Escape'
 
 // функция открытия попапа успешной отправки данных формы
 const showSuccess = () => {
-  const templateSuccess = document.querySelector('#success').content
-  const successElement = templateSuccess.cloneNode(true)
+  const successElement = templateSuccess.content.cloneNode(true)
   document.body.append(successElement)
+  // хэндлер закрытия попапа успеха на esc
+  document.addEventListener('keydown', onRemovePopupSuccessEscKeydown)
 }
 
 // функция закрытия попапа успеха по esc
@@ -65,36 +68,37 @@ const onRemovePopupSuccessEscKeydown = (evt) => {
   }
 }
 
-// хэндлер закрытия попапа успеха на esc
-document.addEventListener('keydown', onRemovePopupSuccessEscKeydown)
-
 // функция закрытия попапа успеха по нажатию любой клавиши
-const onRemovePopupSuccessAnyClick = (evt) => {
+const onDocumentClick = (evt) => {
   if (evt.target.classList.contains('success') || evt.target.classList.contains('success__message')) {
     onRemovePopupSuccess()
   }
 }
 
 // функция закрытия попапа успеха на любой клик мыши
-document.addEventListener('click', onRemovePopupSuccessAnyClick)
+document.addEventListener('click', onDocumentClick)
 
 // функция закрытия попапа успеха
 const onRemovePopupSuccess = () => {
   const successPopup = document.querySelector('.success')
   successPopup.remove()
+  document.removeEventListener('keydown', onRemovePopupSuccessEscKeydown)
 }
 
 // функция показа попапа ошибки загрузки формы
 const showErrorPopup = () => {
-  const errorTemplate = document.querySelector('#error').content
-  const errorElementPopup = errorTemplate.cloneNode(true)
+  const errorElementPopup = templateError.content.cloneNode(true)
   document.body.append(errorElementPopup)
   document.querySelector('.error__button').addEventListener('click', onRemovePopupError)
+  // хэндлер закрытия попапа ошибки на esc
+  document.addEventListener('keydown', onDocumentKeydown)
 }
 
 // функция закрытия попапа ошибки по кнопке
 const onRemovePopupError = () => {
   document.querySelector('.error').remove()
+  // удаляем обработчик
+  document.removeEventListener('keydown', onDocumentKeydown)
 }
 
 // функция закрытия окна ошибки по нажатию любой клавиши
@@ -108,14 +112,11 @@ const onRemovePopupErrorAnyClick = (evt) => {
 document.addEventListener('click', onRemovePopupErrorAnyClick)
 
 // функция закрытия попапа ошибки по esc
-const onRemovePopupErrorEscKeydown = (evt) => {
+const onDocumentKeydown = (evt) => {
   if (document.querySelector('.error') && isEscapeKey(evt)) {
     onRemovePopupError()
   }
 }
-
-// хэндлер закрытия попапа ошибки на esc
-document.addEventListener('keydown', onRemovePopupErrorEscKeydown)
 
 // функция показа ошибки при получении данных с сервера
 const showAlert = (message) => {

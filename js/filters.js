@@ -1,5 +1,11 @@
-const ARTICLE_COUNT = 10
+import { OFFERS_COUNT, MIDDLE_PRICE, LOW_PRICE } from './constants.js'
+
 const mapFiltersForm = document.querySelector('.map__filters')
+const typeHostingElement = mapFiltersForm.querySelector('select[name="housing-type"]')
+const priceElement = mapFiltersForm.querySelector('select[name="housing-price"]')
+const roomsElement = mapFiltersForm.querySelector('select[name="housing-rooms"]')
+const guestsElement = mapFiltersForm.querySelector('select[name="housing-guests"]')
+const featuresList = mapFiltersForm.querySelectorAll('input[name="features"]')
 
 const getRankFeatures = (object, selected) => {
   if (object.offer.features) {
@@ -13,48 +19,55 @@ const getRankFeatures = (object, selected) => {
 const compareFeatures = (object1, object2, selectedFeatures) => getRankFeatures(object2, selectedFeatures) - getRankFeatures(object1, selectedFeatures)
 
 const filterData = (data) => {
-  const housingType = mapFiltersForm.querySelector('select[name="housing-type"]').value
-  const price = mapFiltersForm.querySelector('select[name="housing-price"]').value
-  const rooms = mapFiltersForm.querySelector('select[name="housing-rooms"]').value
-  const guests = mapFiltersForm.querySelector('select[name="housing-guests"]').value
-  const features = mapFiltersForm.querySelectorAll('input[name="features"]')
+  const housingType = typeHostingElement.value
+  const price = priceElement.value
+  const rooms = roomsElement.value
+  const guests = guestsElement.value
   // получаем массив отмеченных features
-  const featureChecked = Array.from(features)
+  const featureChecked = Array.from(featuresList)
     .filter(feature => feature.checked)
     .map((feature) => feature.value)
 
-  return data
-    .filter(i => housingType === 'any' || i.offer.type === housingType)
-    .filter(i => {
-      if (price === 'any') {
-        return true
-      } else if (price === 'middle') {
-        return i.offer.price >= 10000 && i.offer.price <= 50000
-      } else if (price === 'low') {
-        return i.offer.price < 10000
-      } else if (price === 'high') {
-        return i.offer.price > 50000
-      }
+  const housingFilter = item => housingType === 'any' || item.offer.type === housingType
+  const priceFilter = item => {
+    if (price === 'any') {
+      return true
+    } else if (price === 'middle') {
+      return item.offer.price >= LOW_PRICE && item.offer.price <= MIDDLE_PRICE
+    } else if (price === 'low') {
+      return item.offer.price < LOW_PRICE
+    } else if (price === 'high') {
+      return item.offer.price > MIDDLE_PRICE
+    }
+    return false
+  }
+  const roomsFilter = item => rooms === 'any' || item.offer.rooms === +rooms
+  const guestsFilter = item => guests === 'any' || item.offer.guests === +guests
+  const featuresFilter = item => {
+    if (featureChecked.length === 0) {
+      return true
+    }
+    if (!item.offer.features) {
       return false
-    })
-    .filter((i) => rooms === 'any' || i.offer.rooms === +rooms)
-    .filter((i) => guests === 'any' || i.offer.guests === +guests)
+    }
+    return featureChecked
+      .map(i => item.offer.features.includes(i))
+      .reduce((acc, i) => acc && i, true)
+  }
+
+  return data
+    .filter(i => housingFilter(i) && priceFilter(i) && roomsFilter(i) && guestsFilter(i) && featuresFilter(i))
     .slice()
     .sort((a, b) => compareFeatures(a, b, featureChecked))
-    .slice(0, ARTICLE_COUNT)
+    .slice(0, OFFERS_COUNT)
 }
 
 const initFilters = (cb) => {
-  const typeHosting = mapFiltersForm.querySelector('select[name="housing-type"]')
-  const price = mapFiltersForm.querySelector('select[name="housing-price"]')
-  const rooms = mapFiltersForm.querySelector('select[name="housing-rooms"]')
-  const guests = mapFiltersForm.querySelector('select[name="housing-guests"]')
-  const features = mapFiltersForm.querySelectorAll('input[name="features"]')
-  typeHosting.addEventListener('change', cb)
-  price.addEventListener('change', cb)
-  rooms.addEventListener('change', cb)
-  guests.addEventListener('change', cb)
-  features.forEach((i) => i.addEventListener('change', cb))
+  typeHostingElement.addEventListener('change', cb)
+  priceElement.addEventListener('change', cb)
+  roomsElement.addEventListener('change', cb)
+  guestsElement.addEventListener('change', cb)
+  featuresList.forEach((i) => i.addEventListener('change', cb))
 }
 
 export { initFilters, filterData }

@@ -1,52 +1,32 @@
 const mapFiltersForm = document.querySelector('.map__filters')
-const selectsListMapFiltersForm = mapFiltersForm.querySelectorAll('select')
-const inputsListMapFiltersForm = mapFiltersForm.querySelectorAll('input')
+const elementsMapFiltersForm = mapFiltersForm.querySelectorAll('select, input')
 const adForm = document.querySelector('.ad-form')
-const selectsListAdForm = adForm.querySelectorAll('select')
-const inputsListAdForm = adForm.querySelectorAll('input')
-const textareaAdForm = adForm.querySelector('textarea')
-const buttonsListAdForm = adForm.querySelectorAll('button')
+const fieldsetAdForm = adForm.querySelectorAll('fieldset')
 
 const deactivateMapFilters = () => {
 // disabled map-filter-form
   if (!mapFiltersForm.classList.contains('map__filters--disabled')) {
     mapFiltersForm.classList.add('map__filters--disabled')
   }
-
-  // disabled inputs filter-form
-  Array.from(inputsListMapFiltersForm)
+  // disabled inputs selects filter-form
+  Array.from(elementsMapFiltersForm)
     .map(i => {
-      return i.setAttribute('disabled', true)
-    })
-
-  // disabled selects filter-form
-  Array.from(selectsListMapFiltersForm)
-    .map(i => {
-      return i.setAttribute('disabled', true)
+      i.disabled = true
+      return i
     })
 }
+
 const deactivateAdForm = () => {
 // disabled ad-form
   if (!adForm.classList.contains('ad-form--disabled')) {
     adForm.classList.add('ad-form--disabled')
   }
-  // disabled inputs
-  Array.from(inputsListAdForm)
+  // disabled fieldset
+  Array.from(fieldsetAdForm)
     .map(i => {
-      return i.setAttribute('disabled', true)
+      i.disabled = true
+      return i
     })
-  // disabled select
-  Array.from(selectsListAdForm)
-    .map(i => {
-      return i.setAttribute('disabled', true)
-    })
-  // disabled buttons
-  Array.from(buttonsListAdForm)
-    .map(i => {
-      return i.setAttribute('disabled', true)
-    })
-  // disabled textarea
-  textareaAdForm.setAttribute('disabled', true)
 }
 
 const activateMapFilters = () => {
@@ -56,43 +36,24 @@ const activateMapFilters = () => {
   }
 
   // activate map-filters-form
-  Array.from(inputsListMapFiltersForm)
+  Array.from(elementsMapFiltersForm)
     .map(i => {
-      return i.removeAttribute('disabled')
-    })
-
-  // activate map-filters-form
-  Array.from(selectsListMapFiltersForm)
-    .map(i => {
-      return i.removeAttribute('disabled')
+      i.disabled = false
+      return i
     })
 }
+
 const activateAdForm = () => {
 // activate ad-form
   if (adForm.classList.contains('ad-form--disabled')) {
     adForm.classList.remove('ad-form--disabled')
   }
-
-  // activate inputs ad-form
-  Array.from(inputsListAdForm)
+  // activate inputs, selects ad-form
+  Array.from(fieldsetAdForm)
     .map(i => {
-      return i.removeAttribute('disabled')
+      i.disabled = false
+      return i
     })
-
-  // activate select ad-form
-  Array.from(selectsListAdForm)
-    .map(i => {
-      return i.removeAttribute('disabled')
-    })
-
-  // activate buttons ad-form
-  Array.from(buttonsListAdForm)
-    .map(i => {
-      return i.removeAttribute('disabled')
-    })
-
-  // activate textarea ad-form
-  textareaAdForm.removeAttribute('disabled')
 }
 
 export { deactivateMapFilters, deactivateAdForm }
