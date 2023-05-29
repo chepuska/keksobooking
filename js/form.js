@@ -135,7 +135,7 @@ const getRoomCapacityRatioErrorMessage = () => {
 
 rooms.addEventListener('change', () => {
   getRoomCapacityRatioErrorMessage()
-  pristineAdForm.validate(rooms)
+  pristineAdForm.validate(capacity)
 })
 
 pristineAdForm.addValidator(rooms, getGuestsRoomRatio, '', 2, false)
